@@ -16,7 +16,7 @@ export default function Footer() {
                             </span>
                         </Link>
                         <p className="mt-4 text-slate-500 leading-relaxed text-sm">
-                            Platform edukasi dan demonstrasi interaktif untuk memahami algoritma penajaman citra digital (Unsharp Masking) dengan mudah dan visual.
+                            Solusi penajaman citra digital berbasis web yang cepat, mudah, dan profesional. Didesain untuk memaksimalkan kualitas foto Anda secara instan.
                         </p>
                     </div>
 
