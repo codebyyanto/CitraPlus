@@ -52,8 +52,9 @@ export default function DemoPage() {
 
             const data = await res.json();
             // API returns base64 images
-            // original: data.original (optional to use if we want server version, but local is faster for original)
-            // sharpened: data.sharpened
+            if (data.original) {
+                setOriginalPreview(data.original);
+            }
             setProcessedPreview(data.sharpened);
             setMetrics(data.metrics);
         } catch (err) {
