@@ -10,7 +10,7 @@ interface ImageCompareProps {
 export default function ImageCompare({ originalSrc, processedSrc }: ImageCompareProps) {
     return (
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-8">
                 {/* Original */}
                 <div>
                     <h3 className="text-lg font-semibold text-slate-900 mb-3">Citra Asli</h3>
