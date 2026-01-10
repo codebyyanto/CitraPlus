@@ -35,8 +35,12 @@ export default function ParameterPanel({
                         step="0.1"
                         value={radius}
                         onChange={(e) => setRadius(parseFloat(e.target.value))}
-                        className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                        className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600 mb-2"
                     />
+                    <p className="text-xs text-slate-500 leading-relaxed">
+                        Menentukan lebar area tepi yang akan dipertajam.
+                        <span className="block mt-1 text-amber-600 font-medium">💡 Tips: Gunakan radius 0.5 - 2.0 untuk detail halus.</span>
+                    </p>
                 </div>
 
                 {/* Amount */}
@@ -52,8 +56,12 @@ export default function ParameterPanel({
                         step="0.1"
                         value={amount}
                         onChange={(e) => setAmount(parseFloat(e.target.value))}
-                        className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                        className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600 mb-2"
                     />
+                    <p className="text-xs text-slate-500 leading-relaxed">
+                        Mengontrol seberapa kuat efek penajaman (kontras) diterapkan pada tepi.
+                        <span className="block mt-1 text-amber-600 font-medium">💡 Tips: Mulai dari 1.0, naikkan jika kurang tajam. Hati-hati over-sharpening.</span>
+                    </p>
                 </div>
 
                 {/* Threshold */}
@@ -69,14 +77,16 @@ export default function ParameterPanel({
                         step="1"
                         value={threshold}
                         onChange={(e) => setThreshold(parseFloat(e.target.value))}
-                        className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                        className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600 mb-2"
                     />
+                    <p className="text-xs text-slate-500 leading-relaxed">
+                        Nilai minimum perbedaan kecerahan agar penajaman dilakukan. Mengurangi noise.
+                        <span className="block mt-1 text-amber-600 font-medium">💡 Tips: Naikkan jika muncul bintik-bintik (noise) pada area rata.</span>
+                    </p>
                 </div>
             </div>
 
-            <div className="mt-8 p-4 bg-blue-50 rounded-lg text-sm text-blue-800 border border-blue-100">
-                <p><strong>Catatan:</strong> Radius yang lebih tinggi mempengaruhi fitur yang lebih besar. Amount meningkatkan kontras. Threshold membatasi amplifikasi noise.</p>
-            </div>
+
         </div>
     );
 }
