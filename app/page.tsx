@@ -26,8 +26,8 @@ export default function Home() {
 
         <MotionWrapper delay={0.3}>
           <p className="mt-4 text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Platform interaktif untuk memahami dan mengevaluasi teknik peningkatan detail citra digital.
-            Analisis dampak parameter Radius, Amount, dan Threshold secara real-time.
+            Solusi profesional untuk mempertajam foto Anda dengan teknologi Unsharp Masking canggih.
+            Tingkatkan detail, kejernihan, dan kualitas visual gambar Anda secara instan dan mudah.
           </p>
         </MotionWrapper>
 
