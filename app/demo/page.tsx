@@ -17,6 +17,8 @@ export default function DemoPage() {
     const [radius, setRadius] = useState(2.0);
     const [amount, setAmount] = useState(1.5);
     const [threshold, setThreshold] = useState(0);
+    const [isAI, setIsAI] = useState(false);
+    const [mode, setMode] = useState<'photo' | 'document'>('photo');
 
     // Metrics
     const [metrics, setMetrics] = useState<{ mse: number; psnr: number | string; ssim?: number } | null>(null);
@@ -40,6 +42,8 @@ export default function DemoPage() {
             formData.append('radius', radius.toString());
             formData.append('amount', amount.toString());
             formData.append('threshold', threshold.toString());
+            formData.append('ai', isAI.toString());
+            formData.append('mode', mode);
 
             const res = await fetch('/api/unsharp', {
                 method: 'POST',
@@ -114,9 +118,13 @@ export default function DemoPage() {
                                     radius={radius}
                                     amount={amount}
                                     threshold={threshold}
+                                    isAI={isAI}
+                                    mode={mode}
                                     setRadius={setRadius}
                                     setAmount={setAmount}
                                     setThreshold={setThreshold}
+                                    setIsAI={setIsAI}
+                                    setMode={setMode}
                                 />
                             </div>
                         </div>

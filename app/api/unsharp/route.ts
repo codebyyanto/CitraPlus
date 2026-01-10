@@ -88,6 +88,8 @@ export async function POST(req: NextRequest) {
         const radius = parseFloat(formData.get('radius') as string) || 1.0;
         const amount = parseFloat(formData.get('amount') as string) || 1.0;
         const threshold = parseFloat(formData.get('threshold') as string) || 0;
+        const useAI = formData.get('ai') === 'true';
+        const mode = formData.get('mode') as string || 'photo';
 
         if (!file) {
             return NextResponse.json({ error: 'No image uploaded' }, { status: 400 });
@@ -95,21 +97,64 @@ export async function POST(req: NextRequest) {
 
         const buffer = Buffer.from(await file.arrayBuffer());
 
-        // 1. Get Original (sRGB) Metadata and Raw Data
+        // 1. Prepare Original Image (sRGB)
         const originalImage = sharp(buffer);
-        const metadata = await originalImage.metadata();
+        let processingImage = originalImage.clone(); // Default to original
+
+        // AI PRE-PROCESSING ⚡
+        if (useAI) {
+            try {
+                // Denoise (Median 3x3) + Color Boost + Brightness Lift
+                // Note: We chain this on a clone to ensure we don't break the original if it fails
+                processingImage = originalImage.clone()
+                    .median(3)
+                    .modulate({
+                        saturation: 1.3, // +30% Saturation
+                        brightness: 1.05, // +5% Brightness
+                    });
+
+                // Trigger a pipeline check to ensure it's valid
+                await processingImage.metadata();
+            } catch (aiError) {
+                console.warn('AI Enhancement failed, falling back to standard processing:', aiError);
+                processingImage = originalImage.clone(); // Revert
+            }
+        }
+
+        // DOCUMENT MODE PROCESSING 📄
+        if (mode === 'document') {
+            try {
+                // Grayscale -> CLAHE (Local Contrast) -> Gamma (Text Thickening)
+                processingImage = processingImage
+                    .grayscale()
+                    .clahe({ width: 100, height: 100 }) // Adaptive Histogram for equalizing light
+                    .gamma(2.0); // Make text darker/bolder
+            } catch (docError) {
+                console.warn('Document Mode failed:', docError);
+                // Fallback to previous state (AI or Original)
+            }
+        }
+
+        // 🛡️ PIPELINE NORMALIZATION (Crucial Fix)
+        // Reset the pipeline state by exporting to buffer and re-importing.
+        // This forces any complex state (like Grayscale 1-channel from Document Mode) to be resolved
+        // into a standard sRGB + Alpha (4-channel) image before we access raw pixels.
+        const intermediateBuffer = await processingImage.png().toBuffer();
+        processingImage = sharp(intermediateBuffer).toColourspace('srgb').ensureAlpha();
+
+        const metadata = await processingImage.metadata();
         const width = metadata.width || 0;
         const height = metadata.height || 0;
 
-        const { data: rawOriginal } = await originalImage
+        // Get RGB Data for Processing
+        // Note: We use the *processingImage* (which might be AI restored) as the source for the sharpening loop
+        const { data: rawOriginal } = await processingImage
             .clone()
-            .ensureAlpha()
             .raw()
             .toBuffer({ resolveWithObject: true });
 
-        // 2. Create Blurred Version (Used for Unsharp Masking signal)
-        // We blur the RGB image. In LAB terms, this effectively blurs L as well.
-        const { data: rawBlur } = await originalImage
+        // 2. Create Blurred Version from the Processing Image
+        const { data: rawBlur } = await processingImage
             .clone()
             .blur(radius)
             .ensureAlpha()
@@ -188,8 +233,8 @@ export async function POST(req: NextRequest) {
             }
         });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error processing image:', error);
-        return NextResponse.json({ error: 'Failed to process image' }, { status: 500 });
+        return NextResponse.json({ error: error.message || 'Failed to process image' }, { status: 500 });
     }
 }
