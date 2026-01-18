@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Citra Plus 📸
 
-## Getting Started
+Aplikasi web pemrosesan citra (Image Processing) yang menggunakan **Next.js** untuk Frontend dan **Python Flask (OpenCV)** untuk Backend.
 
-First, run the development server:
+![Citra Plus Hero](public/hero-screenshot.png)
+
+## Fitur
+- **Unsharp Masking**: Mempertajam detail gambar menggunakan algoritma unsharp mask di ruang warna LAB.
+- **AI Enhancement**: Simulasi perbaikan kualitas gambar (denoise, saturasi, kecerahan).
+- **Document Mode**: Optimasi khusus untuk dokumen teks (CLAHE + Gamma Correction).
+- **Real-time Preview**: Melihat hasil unsharp mask secara langsung.
+
+## Arsitektur
+- **Frontend**: Next.js 14, React, Tailwind CSS. Berfungsi sebagai UI dan Proxy.
+- **Backend API**: Python Flask, OpenCV, NumPy. Menangani logika pemrosesan citra berat.
+
+## Cara Menjalankan Project
+
+Anda perlu menjalankan **Frontend** dan **Backend** secara bersamaan di terminal yang berbeda.
+
+### 1. Backend (Python Flask)
+
+Pastikan Python sudah terinstall.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Masuk ke folder root project
+cd citra-plus
+
+# Install dependensi (hanya perlu sekali)
+python -m pip install -r backend/requirements.txt
+
+# Jalankan server Flask (Default port: 5000)
+python backend/app.py
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Frontend (Next.js)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Buka terminal **baru** (biarkan terminal backend tetap jalan).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Masuk ke folder root project
+cd citra-plus
 
-## Learn More
+# Install dependensi (hanya perlu sekali)
+npm install
 
-To learn more about Next.js, take a look at the following resources:
+# Jalankan server Next.js (Default port: 3000)
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. Akses Aplikasi
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Buka browser dan kunjungi [http://localhost:3000/demo](http://localhost:3000/demo).
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Struktur Folder
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `/app`: Kode sumber Frontend Next.js.
+- `/backend`: Kode sumber Backend Python Flask.
+  - `app.py`: Entry point server Flask.
+  - `image_utils.py`: Logika pemrosesan citra (OpenCV).
